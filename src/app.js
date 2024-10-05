@@ -1,24 +1,37 @@
 const express = require('express');
+const connectDB = require("./config/database")
+const UserModel=require("./models/user")
 const app = express();
 
-app.get("/user", (req, res, next) => {
-    console.log("1st response")
-    //res.send("1");
-    next();
-}, (req, res, next) => {
-    console.log("2nd response")
-    //res.send("2");
-    next();
-    console.log("hi")
-},(req, res, next) => {
-    console.log("3 response")
-   res.send("3");
-    //next();
-},(req, res, next) => {
-    console.log("4 response")
-   // res.send("4");
-  // next();
-},)
-app.listen(5000, () => {
-    console.log('server listening on 5000');
+
+
+app.post("/signup", async(req, res) => {
+    const user = {
+        firstName: "Mamatha",
+        lastName: "G",
+        emailId: "m@gmail.com",
+        password: "Mamatha@123",
+        age:"26"
+    }
+
+    const User = new UserModel(user)//creating instance of the UserModel
+    await User.save();//returns promise
+    res.send("user added successfully")
+
+})
+
+
+
+
+
+
+
+connectDB().then(()=> {
+    console.log(" connection established successfully")
+    app.listen(5000, () => {
+        console.log('server listening on 5000');
+    })
+})
+    .catch((err) => {
+    console.log("database coneection is not established")
 })

@@ -13,4 +13,9 @@
 -regular expressions in routes ((ab)?(means ab is optional),b+(we can add many bs),(ab*cd)*(means in between we can use anything))
 -app.use(we can use all methods get,delete,post,put)
 -multiple routes can by handled by next()
-
+-error handling
+-to connect to the database have to create config 
+-install mongoose
+-call to the connectDB function and connect to database before listening to the port 5000
+-create a userschema and user model
+-pushing some documents to the database collection
