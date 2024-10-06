@@ -15,8 +15,12 @@ app.post("/signup", async(req, res) => {
     }
 
     const User = new UserModel(user)//creating instance of the UserModel
-    await User.save();//returns promise
+    try {
+        await User.save();//returns promise
     res.send("user added successfully")
+    } catch (err) {
+        res.status(400).send("error in saving")
+    }
 
 })
 

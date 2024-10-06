@@ -19,3 +19,4 @@
 -call to the connectDB function and connect to database before listening to the port 5000
 -create a userschema and user model
 -pushing some documents to the database collection
+-error handling when handling the db operations
