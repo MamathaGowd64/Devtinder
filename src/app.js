@@ -75,17 +75,26 @@ app.delete("/user", async (req, res) => {
 
 //update the user
 
-app.patch("/user", async (req, res) => {
-    const userId = req.body.userId;
+app.patch("/user/:userId", async (req, res) => {
+    const userId = req.params?.userId;
     const data = req.body;
     try {
+
+        const allowedUpdates = ["about", "photoURL", "skills"];
+        const allowed = Object.keys(data).every((k) => allowedUpdates.includes(k));
+        if (!allowed) {
+            throw new Error("can not update the user");
+        }
+        if (data?.skills.length > 10) {
+            throw new Error("skill can not include more than 10");
+        }
         await UserModel.findByIdAndUpdate(userId, data,
-            { returnDocument: 'after' });
+            { returnDocument: 'after',runValidators:true });
         console.log(req.body)
         res.send("user updated successfully")
         }   
     catch(err) {
-        res.status(400).send("something went wrong")
+        res.status(400).send("something went wrong" + err)
     }
 })
 
