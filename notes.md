@@ -27,3 +27,6 @@
 -data sanitizing- add api validation for each field
 -install validator (npm i validator) to validate (ex:email)
 -never trust req.body
+-install bcrypt to encrypt the password(npm i bcrypt)
+-create login api
+-compare passowrds and emaild while login
