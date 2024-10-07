@@ -20,3 +20,5 @@
 -create a userschema and user model
 -pushing some documents to the database collection
 -error handling when handling the db operations
+-creating REST apis
+-adding custom validations to the schema
