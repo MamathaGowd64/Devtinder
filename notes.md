@@ -25,3 +25,5 @@
 -add timestamps to the users schema
 -add api level validation on patch request and signup post api
 -data sanitizing- add api validation for each field
+-install validator (npm i validator) to validate (ex:email)
+-never trust req.body
