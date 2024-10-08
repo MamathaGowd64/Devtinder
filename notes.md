@@ -30,3 +30,9 @@
 -install bcrypt to encrypt the password(npm i bcrypt)
 -create login api
 -compare passowrds and emaild while login
+
+
+-Authentication JWT token
+-install cookie parser, install jwt token
+-send dummy cookie and explore with jwt token
+-implementing logic for jwt token
