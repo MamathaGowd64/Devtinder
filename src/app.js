@@ -3,7 +3,8 @@ const connectDB = require("./config/database")
 const UserModel = require("./models/user");
 const bcrypt = require("bcrypt")
 const cookieParser = require("cookie-parser")
-const jwt=require("jsonwebtoken")
+const jwt = require("jsonwebtoken")
+const {userAuth}=require("./middlewares/auth")
 const { validateSignUpData } = require('./utils/validation');
 const app = express();
 
@@ -53,11 +54,11 @@ app.post("/login", async (req, res) => {
 
             //create JWT token
             
-            const token = await jwt.sign({ _id: user._id }, "Dev@Tinder123");
-            console.log(token)
+            const token = await jwt.sign({ _id: user._id }, "Dev@Tinder123",{expiresIn:"1d"});
+           // console.log(token)
 
             //add the token to cookie and send the response to the client
-            res.cookie("token",token);
+            res.cookie("token",token,{expires: new Date(Date.now()+ 8 * 900000)});
             res.send("Login Successfull!!");
         } else {
             throw new Error("Invalid Credentials")
@@ -69,108 +70,117 @@ app.post("/login", async (req, res) => {
 
 
 
-app.get("/profile", async (req, res) => {
+app.get("/profile",userAuth, async (req, res) => {
     try {
-        const { token } = req.cookies;
-        if (!token) {
-            throw new Error("Invalid Token")
-        }
+        const user = req.user;
+        // const { token } = req.cookies;
+        // if (!token) {
+        //     throw new Error("Invalid Token")
+        // }
+
     //validate my token
 
-    const decodedMessage = await jwt.verify(token, "Dev@Tinder123")
-    console.log(decodedMessage)
-    const { _id } = decodedMessage;
-        const user = await UserModel.findById(_id)
-        if (!user) {
-            throw new ERROR("user doesnot exist")
-        }
-    console.log("user id is " + _id);
-    res.send("name is "+ user.firstName)
+    // const decodedMessage = await jwt.verify(token, "Dev@Tinder123")
+    // console.log(decodedMessage)
+    // const { _id } = decodedMessage;
+    //     const user = await UserModel.findById(_id)
+    //     if (!user) {
+    //         throw new ERROR("user doesnot exist")
+    //     }
+    // console.log("user id is " + _id);
+        // res.send("name is "+ user.firstName)
+        
+        res.send(user);
     } catch (err) {
         res.send("ERROR: " + err.message)
     }
 });
 
 
-
-
-
-
-
-//get user by emailId
-app.get("/user", async (req, res) => {
-    const userEmailId = req.body.emailId;
-    try {
-        const users = await UserModel.find({ emailId: userEmailId });
-        if (users.length === 0) {
-            res.status(404).send("user not found")
-        }
-        else {
-            res.send(users);
-        }
-    }
-    catch(err) {
-        res.status(400).send("something went wrong")
-    }
-})
-
-//Feed API-GET /feed -get all the users from the database
-app.get("/feed", async(req, res) => {
-    try {
-        const users = await UserModel.find({});
-        if (users.length === 0) {
-            res.status(404).send("user not found")
-        }
-        else {
-            res.send(users);
-        }
-    }
-    catch(err) {
-        res.status(400).send("something went wrong")
-    }
+app.post("/sendRequest", userAuth, (req, res) => {
+    const user = req.user;
+   // console.log(user)
+    res.send("connetion sent by " + user.firstName);
+    
 })
 
 
 
-//delete the user
-
-app.delete("/user", async (req, res) => {
-    const userId = req.body.userId;
-    try {
-        await UserModel.findByIdAndDelete(userId);
-        res.send("user deleted successfully")
-        }   
-    catch(err) {
-        res.status(400).send("something went wrong")
-    }
-})
 
 
+
+
+// //get user by emailId
+// app.get("/user", async (req, res) => {
+//     const userEmailId = req.body.emailId;
+//     try {
+//         const users = await UserModel.find({ emailId: userEmailId });
+//         if (users.length === 0) {
+//             res.status(404).send("user not found")
+//         }
+//         else {
+//             res.send(users);
+//         }
+//     }
+//     catch(err) {
+//         res.status(400).send("something went wrong")
+//     }
+// })
+// //Feed API-GET /feed -get all the users from the database
+// app.get("/feed", async(req, res) => {
+//     try {
+//         const users = await UserModel.find({});
+//         if (users.length === 0) {
+//             res.status(404).send("user not found")
+//         }
+//         else {
+//             res.send(users);
+//         }
+//     }
+//     catch(err) {
+//         res.status(400).send("something went wrong")
+//     }
+// })
+
+// //delete the user
+
+// app.delete("/user", async (req, res) => {
+//     const userId = req.body.userId;
+//     try {
+//         await UserModel.findByIdAndDelete(userId);
+//         res.send("user deleted successfully")
+//         }
+//     catch(err) {
+//         res.status(400).send("something went wrong")
+//     }
+// })
 
 //update the user
 
-app.patch("/user/:userId", async (req, res) => {
-    const userId = req.params?.userId;
-    const data = req.body;
-    try {
+// app.patch("/user/:userId", async (req, res) => {
+//     const userId = req.params?.userId;
+//     const data = req.body;
+//     try {
 
-        const allowedUpdates = ["about", "photoURL", "skills"];
-        const allowed = Object.keys(data).every((k) => allowedUpdates.includes(k));
-        if (!allowed) {
-            throw new Error("can not update the user");
-        }
-        if (data?.skills.length > 10) {
-            throw new Error("skill can not include more than 10");
-        }
-        await UserModel.findByIdAndUpdate(userId, data,
-            { returnDocument: 'after',runValidators:true });
-        console.log(req.body)
-        res.send("user updated successfully")
-        }   
-    catch(err) {
-        res.status(400).send("something went wrong" + err)
-    }
-})
+//         const allowedUpdates = ["about", "photoURL", "skills"];
+//         const allowed = Object.keys(data).every((k) => allowedUpdates.includes(k));
+//         if (!allowed) {
+//             throw new Error("can not update the user");
+//         }
+//         if (data?.skills.length > 10) {
+//             throw new Error("skill can not include more than 10");
+//         }
+//         await UserModel.findByIdAndUpdate(userId, data,
+//             { returnDocument: 'after',runValidators:true });
+//         console.log(req.body)
+//         res.send("user updated successfully")
+//         }
+//     catch(err) {
+//         res.status(400).send("something went wrong" + err)
+//     }
+// })
+
+
 
 
 

@@ -36,3 +36,5 @@
 -install cookie parser, install jwt token
 -send dummy cookie and explore with jwt token
 -implementing logic for jwt token
+-create the userAuth miidleware and used in the middlewares
+-set the expire date for token and cookies
