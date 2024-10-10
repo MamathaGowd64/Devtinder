@@ -38,3 +38,6 @@
 -implementing logic for jwt token
 -create the userAuth miidleware and used in the middlewares
 -set the expire date for token and cookies
+-create user schema methods for get JWT token and password encryption, validate
+-introducing the express router
+-creating seperate folder  for routers
