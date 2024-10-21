@@ -52,4 +52,13 @@
 -Thought process of get and post
 -read about ref and populate in mongoose database
 -create get /users/requests/received
+-explore the $nin, $ne, $and query operators
+-pagination
 
+-/feed?page=1&limit=10=>first 10 users 1-10
+-/feed?page=2&limit=10=>11-20
+-/feed?page=3&limit=10=>21-30
+
+skip(), limit() methods in mongoose
+
+skip=(page-1)*limit
