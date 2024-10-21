@@ -41,3 +41,15 @@
 -create user schema methods for get JWT token and password encryption, validate
 -introducing the express router
 -creating seperate folder  for routers
+-created connection request schema
+-$or and $and query 
+-read more about logical queries
+-why should not create more indexes into databases
+-why do we need index
+-advantages and disadvantages of index
+-reading article about index
+
+-Thought process of get and post
+-read about ref and populate in mongoose database
+-create get /users/requests/received
+
